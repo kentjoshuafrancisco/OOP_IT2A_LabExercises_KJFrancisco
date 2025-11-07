@@ -1,8 +1,3 @@
-// File: ArithmeticGameGUI.java
-// Language: Java (Swing)
-// Description: A graphical user interface for an Arithmetic Game,
-// implementing controls for continue, exit, separate tracking for correct/wrong answers,
-// and a visual celebration effect for correct answers.
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,19 +9,19 @@ public class ArithmeticGameGUI extends JFrame {
 
     // Core Components
     private JTextField answerField;
-    // New field to reference the panel holding the math problem for visual effects
+    
     private JPanel questionPanel; 
     private JLabel num1Label, operatorLabel, num2Label, countLabel, feedbackLabel;
     private JButton submitButton;
     
-    // Game State
-    private int correctCount = 0; // Tracks the number of correct answers
-    private int wrongCount = 0;   // Tracks the number of wrong answers
+    
+    private int correctCount = 0; 
+    private int wrongCount = 0;   
     private int correctResult;
     private String currentOperator = "+"; 
     private Random random = new Random();
     
-    // Store the default background color to reset the panel later
+    
     private final Color defaultBackgroundColor = UIManager.getColor("Panel.background");
 
     public ArithmeticGameGUI() {
@@ -60,11 +55,7 @@ public class ArithmeticGameGUI extends JFrame {
         setVisible(true);
     }
     
-    // --- Helper Methods to Create Sub-Panels ---
-
-    /**
-     * Creates the control panel on the left for selecting operations and level.
-     */
+   
     private JPanel createControlsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2, 1, 10, 20)); // Two sections: Operations and Levels
@@ -108,9 +99,7 @@ public class ArithmeticGameGUI extends JFrame {
         return panel;
     }
 
-    /**
-     * Creates the main game components (Question, Input, Submit, Counts, Controls).
-     */
+    
     private JPanel createGameAreaPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -132,7 +121,7 @@ public class ArithmeticGameGUI extends JFrame {
         answerField.setMaximumSize(new Dimension(150, 70));
         answerField.addActionListener(this::checkAnswer); // Submit on Enter
         
-        // Add components to the question panel
+        
         questionPanel.add(num1Label);
         questionPanel.add(operatorLabel);
         questionPanel.add(num2Label);
@@ -141,14 +130,14 @@ public class ArithmeticGameGUI extends JFrame {
         
         mainPanel.add(questionPanel, BorderLayout.CENTER); 
         
-        // --- B. Submit, Feedback, Counts, and Control Panel (SOUTH of mainPanel) ---
+       
         JPanel bottomPanel = new JPanel(new BorderLayout(20, 10)); // Added vertical gap
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 
-        // Top section of bottomPanel (Submit & Counts)
+        
         JPanel topBottomSection = new JPanel(new BorderLayout(20, 0));
 
-        // 1. Submit Button (WEST of topBottomSection)
+        
         submitButton = new JButton("SUBMIT");
         submitButton.setFont(new Font("Inter", Font.BOLD, 20));
         submitButton.setPreferredSize(new Dimension(150, 50));
@@ -158,30 +147,29 @@ public class ArithmeticGameGUI extends JFrame {
         submitWrapper.add(submitButton);
         topBottomSection.add(submitWrapper, BorderLayout.WEST);
 
-        // 2. Counts Display (CENTER of topBottomSection)
+       
         countLabel = new JLabel("", JLabel.CENTER);
         countLabel.setFont(new Font("Inter", Font.BOLD, 18));
         topBottomSection.add(countLabel, BorderLayout.CENTER);
 
         bottomPanel.add(topBottomSection, BorderLayout.NORTH); 
 
-        // 3. Feedback label (CENTER of bottomPanel)
+        
         feedbackLabel = new JLabel("Ready to play!", JLabel.CENTER);
         feedbackLabel.setFont(new Font("Inter", Font.ITALIC, 16));
         bottomPanel.add(feedbackLabel, BorderLayout.CENTER); 
 
-        // 4. Control Buttons Panel (SOUTH of bottomPanel)
+       
         JPanel controlButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
 
-        // Continue Button
+       
         JButton continueButton = new JButton("CONTINUE");
         continueButton.setFont(new Font("Inter", Font.BOLD, 16));
-        continueButton.setBackground(new Color(60, 179, 113)); // Medium Sea Green
+        continueButton.setBackground(new Color(60, 179, 113)); 
         continueButton.setForeground(Color.WHITE);
         continueButton.addActionListener(e -> generateNewProblem());
         controlButtonsPanel.add(continueButton);
 
-        // Exit Button
         JButton exitButton = new JButton("EXIT GAME");
         exitButton.setFont(new Font("Inter", Font.BOLD, 16));
         exitButton.setBackground(new Color(220, 20, 60)); // Crimson Red
@@ -196,9 +184,7 @@ public class ArithmeticGameGUI extends JFrame {
         return mainPanel;
     }
     
-    /**
-     * Creates a standardized JLabel for math operations.
-     */
+   
     private JLabel createMathLabel(String text, Font font) {
         JLabel label = new JLabel(text, JLabel.CENTER);
         label.setFont(font);
@@ -208,24 +194,20 @@ public class ArithmeticGameGUI extends JFrame {
         return label;
     }
 
-    // --- Game Logic ---
-
-    /**
-     * Generates a new arithmetic problem based on the current operator.
-     */
+   
     private void generateNewProblem() {
         // Simple range 1-10 for now (based on Level 1 in the original logic)
         int num1 = random.nextInt(10) + 1; 
         int num2 = random.nextInt(10) + 1;
         
-        // Ensure division and modulo result in whole numbers for simplicity
+        
         if (currentOperator.equals("/") || currentOperator.equals("%")) {
              // Make sure num1 is cleanly divisible by num2, and num2 is not zero.
              if (num2 == 0) num2 = 1;
              num1 = num2 * (random.nextInt(5) + 1); 
         }
 
-        // Ensure result is non-negative for subtraction, if possible
+        
         if (currentOperator.equals("-") && num1 < num2) {
             int temp = num1;
             num1 = num2;
@@ -252,9 +234,7 @@ public class ArithmeticGameGUI extends JFrame {
         answerField.requestFocusInWindow(); // Put cursor back in the input field
     }
     
-    /**
-     * Updates the display showing the current correct and wrong answer counts.
-     */
+    
     private void updateCountsDisplay() {
         // Use HTML to style the counts with colors
         countLabel.setText(String.format(
@@ -262,9 +242,7 @@ public class ArithmeticGameGUI extends JFrame {
             correctCount, wrongCount));
     }
 
-    /**
-     * Checks the user's input against the correct result, updates counts, and shows feedback.
-     */
+    
     private void checkAnswer(ActionEvent e) {
         try {
             int userAnswer = Integer.parseInt(answerField.getText().trim());
@@ -285,7 +263,7 @@ public class ArithmeticGameGUI extends JFrame {
             
             updateCountsDisplay(); // Update the counts label
 
-            // Use a Timer to wait 1 second before generating the next problem and resetting the background
+           
             Timer timer = new Timer(1000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
@@ -304,7 +282,7 @@ public class ArithmeticGameGUI extends JFrame {
         }
     }
 
-    // --- Main Entry Point ---
+    
 
     public static void main(String[] args) {
         // Swing components must be created and updated on the Event Dispatch Thread (EDT)
@@ -312,4 +290,5 @@ public class ArithmeticGameGUI extends JFrame {
             new ArithmeticGameGUI();
         });
     }
+
 }
